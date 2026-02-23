@@ -26,6 +26,7 @@ use tracing_subscriber::EnvFilter;
 mod media;
 mod signaling;
 mod streaming;
+mod ui;
 mod webrtc_peer;
 
 // Re-export top-level types for use as a library crate in tests.
@@ -43,7 +44,7 @@ pub use webrtc_peer::{munge_sdp_bitrate, PeerSession, TARGET_VIDEO_BITRATE_BPS};
 )]
 struct Cli {
     #[command(subcommand)]
-    command: Command,
+    command: Option<Command>,
 }
 
 #[derive(Subcommand)]
@@ -72,6 +73,9 @@ enum Command {
         /// Base64+Gzip encoded payload.
         payload: String,
     },
+
+    /// Launch the interactive Terminal User Interface (default if no subcommand given).
+    Tui,
 }
 
 // ── entry point ───────────────────────────────────────────────────────────────
@@ -86,12 +90,13 @@ async fn main() -> Result<()> {
 
     let cli = Cli::parse();
 
-    match cli.command {
+    match cli.command.unwrap_or(Command::Tui) {
         Command::Offer => run_offer().await,
         Command::Receive { payload } => run_receive(&payload).await,
         Command::Preview => run_preview(),
         Command::EncodeQr => run_encode_qr().await,
         Command::DecodeQr { payload } => run_decode_qr(&payload),
+        Command::Tui => ui::run().map_err(Into::into),
     }
 }
 

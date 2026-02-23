@@ -42,6 +42,10 @@ clap = { version = "4", features = ["derive"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
+# Terminal UI
+ratatui = "0.29"
+crossterm = "0.28"
+
 # Optional GStreamer media engine
 gstreamer     = { version = "0.23", optional = true }
 gstreamer-app = { version = "0.23", optional = true }
