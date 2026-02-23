@@ -1,0 +1,51 @@
+[package]
+name = "rust4k-p2p"
+version = "0.1.0"
+edition = "2021"
+description = "Decentralized, ultra-low latency voice & 4K 60Hz desktop streaming via WebRTC P2P"
+license = "MIT"
+
+[[bin]]
+name = "rust4k-p2p"
+path = "src/main.rs"
+
+[features]
+default = []
+# Enable GStreamer-based screen capture / hardware encoding (requires libgstreamer dev headers)
+gstreamer = ["dep:gstreamer", "dep:gstreamer-app", "dep:gstreamer-video"]
+
+[dependencies]
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# WebRTC P2P stack (webrtc-rs)
+webrtc = "0.13"
+
+# SDP serialisation
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# QR-Airgap signaling: compression + encoding + QR rendering
+flate2 = "1"
+base64 = "0.22"
+qrcode = "0.14"
+image = { version = "0.25", default-features = false, features = ["png"] }
+
+# Error handling
+anyhow = "1"
+thiserror = "1"
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Optional GStreamer media engine
+gstreamer     = { version = "0.23", optional = true }
+gstreamer-app = { version = "0.23", optional = true }
+gstreamer-video = { version = "0.23", optional = true }
+
+[dev-dependencies]
+tokio-test = "0.4"
